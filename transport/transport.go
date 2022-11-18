@@ -19,6 +19,7 @@ package transport
 
 import (
 	"errors"
+	"github.com/openziti/sdk-golang/ziti"
 	"net"
 
 	"github.com/elastic/elastic-agent-libs/logp"
@@ -48,7 +49,7 @@ func Dial(c Config, network, address string) (net.Conn, error) {
 
 func MakeDialer(c Config) (Dialer, error) {
 	var err error
-	dialer := NetDialer(c.Timeout)
+	dialer := ziti.NewDialerWithFallback(nil, NetDialer(c.Timeout))
 	dialer, err = ProxyDialer(logp.NewLogger(logSelector), c.Proxy, dialer)
 	if err != nil {
 		return nil, err
